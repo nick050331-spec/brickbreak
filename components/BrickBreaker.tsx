@@ -438,13 +438,13 @@ const BrickBreaker: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-2 md:p-4 font-sans text-slate-900 w-full overflow-x-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-2 md:p-4 font-sans text-slate-900 w-full overflow-hidden box-border">
       <audio ref={audioRef} src="/Hyper_Speed_Run.mp3" loop />
-      <div className="relative group w-full max-w-[800px]">
+      <div className="relative group w-full max-w-[800px] mx-auto">
         {/* Glow effect */}
         <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-emerald-300 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
         
-        <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 shadow-2xl w-full">
+        <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 shadow-2xl w-full box-border">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-center justify-between px-4 md:px-6 py-3 md:py-4 bg-white/80 backdrop-blur-md border-b border-gray-200 gap-3 md:gap-4">
             
@@ -486,17 +486,17 @@ const BrickBreaker: React.FC = () => {
             </div>
             
             {/* Center: Title & Buttons */}
-            <div className="flex flex-col items-center gap-1 md:gap-2">
-              <h1 className="text-lg md:text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500">
+            <div className="flex flex-col items-center gap-2 mt-2 md:mt-0">
+              <h1 className="text-base md:text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 text-center">
                 INU 벽돌깨기
               </h1>
               
               {(gameState === 'PLAYING' || gameState === 'PAUSED') && (
-                <div className="flex gap-2">
-                  <button onClick={togglePause} className="px-3 md:px-4 py-1 md:py-1.5 bg-gray-100 hover:bg-gray-200 text-slate-700 text-xs md:text-sm font-bold rounded-full transition-colors border border-gray-300">
+                <div className="flex flex-wrap justify-center gap-2">
+                  <button onClick={togglePause} className="px-3 md:px-4 py-1 md:py-1.5 bg-gray-100 hover:bg-gray-200 text-slate-700 text-[10px] md:text-sm font-bold rounded-full transition-colors border border-gray-300 whitespace-nowrap">
                     {gameState === 'PLAYING' ? 'PAUSE' : 'RESUME'}
                   </button>
-                  <button onClick={() => setGameState('START')} className="px-3 md:px-4 py-1 md:py-1.5 bg-gray-100 hover:bg-red-100 text-red-500 hover:text-red-600 text-xs md:text-sm font-bold rounded-full transition-colors border border-gray-300">
+                  <button onClick={() => setGameState('START')} className="px-3 md:px-4 py-1 md:py-1.5 bg-gray-100 hover:bg-red-100 text-red-500 hover:text-red-600 text-[10px] md:text-sm font-bold rounded-full transition-colors border border-gray-300 whitespace-nowrap">
                     RESTART
                   </button>
                 </div>
@@ -537,12 +537,20 @@ const BrickBreaker: React.FC = () => {
             </div>
           </div>
 
+          <div className="relative w-full flex justify-center">
+            <canvas
+              ref={canvasRef}
+              className="block bg-transparent cursor-none touch-none w-full max-w-full"
+              style={{ touchAction: 'none' }}
+            />
+          </div>
+
           {gameState === 'PLAYING' && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0">
               <img 
                 src="/Mascot.jpg" 
                 alt="횃불이" 
-                className={`w-80 h-80 object-contain transition-all duration-300 animate-float rounded-2xl shadow-xl ${
+                className={`w-48 h-48 md:w-80 md:h-80 object-contain transition-all duration-300 animate-float rounded-2xl shadow-xl ${
                   mascotEmotion === 'happy' ? 'scale-110 brightness-110 drop-shadow-[0_0_30px_rgba(255,217,61,0.5)]' :
                   mascotEmotion === 'sad' ? 'scale-90 grayscale opacity-40' : 'opacity-80'
                 }`}
@@ -560,17 +568,17 @@ const BrickBreaker: React.FC = () => {
           {/* Overlay Screens */}
           {gameState !== 'PLAYING' && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-10">
-              <div className="text-center p-8 bg-white rounded-2xl border border-gray-200 shadow-2xl animate-in zoom-in duration-300">
+              <div className="text-center p-6 md:p-8 bg-white rounded-2xl border border-gray-200 shadow-2xl animate-in zoom-in duration-300 w-11/12 max-w-md mx-auto">
                 {gameState === 'START' && (
                   <>
-                    <div className="mb-6 flex justify-center">
-                      <img src="/Mascot.jpg" alt="횃불이" className="w-40 h-40 object-contain animate-dance drop-shadow-[0_0_15px_rgba(0,0,0,0.1)] rounded-2xl shadow-lg" />
+                    <div className="mb-4 md:mb-6 flex justify-center">
+                      <img src="/Mascot.jpg" alt="횃불이" className="w-24 h-24 md:w-40 md:h-40 object-contain animate-dance drop-shadow-[0_0_15px_rgba(0,0,0,0.1)] rounded-2xl shadow-lg" />
                     </div>
-                    <h2 className="text-4xl font-black text-slate-900 mb-2">INU 벽돌깨기</h2>
-                    <p className="text-slate-600 mb-4 max-w-xs mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-2">INU 벽돌깨기</h2>
+                    <p className="text-slate-600 mb-4 max-w-xs mx-auto text-xs md:text-sm">
                       Use Arrow Keys or Swipe to move the paddle. Destroy 3 RED bricks to win!
                     </p>
-                    <p className="text-blue-500 font-bold mb-4">
+                    <p className="text-blue-500 font-bold mb-4 text-xs md:text-sm">
                       영어교육과 202402110 정현우
                     </p>
                     <input
@@ -652,13 +660,13 @@ const BrickBreaker: React.FC = () => {
         </div>
 
         {/* Controls Hint */}
-        <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8 text-slate-600 text-xs md:text-sm font-medium">
-          <div className="flex items-center gap-2">
+        <div className="mt-4 flex flex-wrap justify-center items-center gap-4 md:gap-8 text-slate-600 text-[10px] md:text-sm font-medium px-4 text-center">
+          <div className="flex items-center justify-center gap-2">
             <kbd className="px-2 py-1 bg-gray-200 rounded border border-gray-300 text-slate-700">←</kbd>
             <kbd className="px-2 py-1 bg-gray-200 rounded border border-gray-300 text-slate-700">→</kbd>
             <span>Move Paddle</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <svg className="w-4 h-4 md:w-5 md:h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
             </svg>
