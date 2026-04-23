@@ -35,7 +35,7 @@ const BrickBreaker: React.FC = () => {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch('https://script.google.com/macros/s/AKfycbwRUMKXz5q6bYKDz8xU9CVOxo_kAFwEO9lWrYfAWqRPA-olQRQtlj3MebHsG8YflTZi/exec');
+      const res = await fetch('https://script.google.com/macros/s/AKfycby72n9NSLrX9tzvd1foprwKBl6kgT60xqrcHFEmGQ7AUF6JkWRQoEQKEN6PSk20DdSm/exec');
       const text = await res.text();
       try {
         const data = JSON.parse(text);
@@ -112,7 +112,7 @@ const BrickBreaker: React.FC = () => {
 
   const saveGameResult = async (finalScore: number, finalTime: number) => {
     try {
-      await fetch('https://script.google.com/macros/s/AKfycbwRUMKXz5q6bYKDz8xU9CVOxo_kAFwEO9lWrYfAWqRPA-olQRQtlj3MebHsG8YflTZi/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycby72n9NSLrX9tzvd1foprwKBl6kgT60xqrcHFEmGQ7AUF6JkWRQoEQKEN6PSk20DdSm/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -121,7 +121,7 @@ const BrickBreaker: React.FC = () => {
         body: JSON.stringify({
           name: playerName || 'Unknown',
           score: finalScore,
-          time: finalTime,
+          time: formatTime(finalTime),
         }),
       });
       setTimeout(fetchLeaderboard, 2000);
@@ -429,7 +429,9 @@ const BrickBreaker: React.FC = () => {
             <div key={idx} className="flex justify-between items-center bg-white px-3 py-2 rounded shadow-sm border border-gray-100">
               <span className="font-bold text-slate-700 w-6 text-center">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</span>
               <span className="font-medium text-slate-800 flex-1 truncate px-2 text-left">{entry.name}</span>
-              <span className="font-mono font-bold text-blue-600">{formatTime(entry.time)}</span>
+              <span className="font-mono font-bold text-blue-600">
+                {typeof entry.time === 'number' ? formatTime(entry.time) : entry.time}
+              </span>
             </div>
           ))}
         </div>
