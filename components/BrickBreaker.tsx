@@ -438,16 +438,43 @@ const BrickBreaker: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 font-sans text-slate-900">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-2 md:p-4 font-sans text-slate-900 w-full overflow-x-hidden">
       <audio ref={audioRef} src="/Hyper_Speed_Run.mp3" loop />
-      <div className="relative group">
+      <div className="relative group w-full max-w-[800px]">
         {/* Glow effect */}
         <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-emerald-300 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
         
-        <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 shadow-2xl">
+        <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 shadow-2xl w-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-md border-b border-gray-200">
-            <div className="flex items-center gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-between px-4 md:px-6 py-3 md:py-4 bg-white/80 backdrop-blur-md border-b border-gray-200 gap-3 md:gap-4">
+            
+            {/* Top row for mobile: Score, Time & Lives */}
+            <div className="flex w-full justify-between items-center md:hidden">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col">
+                  <span className="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Score</span>
+                  <span className="text-slate-900 text-lg font-black tabular-nums">{score}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Time</span>
+                  <span className="text-slate-900 text-lg font-black tabular-nums">{formatTime(elapsedTime)}</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Lives</span>
+                <div className="flex gap-1 mt-1">
+                  {[...Array(3)].map((_, i) => (
+                    <div 
+                      key={i} 
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i < lives ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' : 'bg-gray-200'}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Left: Score & Time */}
+            <div className="hidden md:flex items-center gap-8">
               <div className="flex flex-col">
                 <span className="text-slate-500 text-xs uppercase tracking-widest font-bold">Score</span>
                 <span className="text-slate-900 text-2xl font-black tabular-nums">{score}</span>
@@ -458,24 +485,26 @@ const BrickBreaker: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex items-center gap-6">
-              <h1 className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500">
+            {/* Center: Title & Buttons */}
+            <div className="flex flex-col items-center gap-1 md:gap-2">
+              <h1 className="text-lg md:text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500">
                 INU 벽돌깨기
               </h1>
               
               {(gameState === 'PLAYING' || gameState === 'PAUSED') && (
                 <div className="flex gap-2">
-                  <button onClick={togglePause} className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-slate-700 text-sm font-bold rounded-full transition-colors border border-gray-300">
+                  <button onClick={togglePause} className="px-3 md:px-4 py-1 md:py-1.5 bg-gray-100 hover:bg-gray-200 text-slate-700 text-xs md:text-sm font-bold rounded-full transition-colors border border-gray-300">
                     {gameState === 'PLAYING' ? 'PAUSE' : 'RESUME'}
                   </button>
-                  <button onClick={() => setGameState('START')} className="px-4 py-1.5 bg-gray-100 hover:bg-red-100 text-red-500 hover:text-red-600 text-sm font-bold rounded-full transition-colors border border-gray-300">
+                  <button onClick={() => setGameState('START')} className="px-3 md:px-4 py-1 md:py-1.5 bg-gray-100 hover:bg-red-100 text-red-500 hover:text-red-600 text-xs md:text-sm font-bold rounded-full transition-colors border border-gray-300">
                     RESTART
                   </button>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-6">
+            {/* Desktop Right: Vol & Lives */}
+            <div className="hidden md:flex items-center gap-6">
               <div className="flex flex-col items-center">
                 <span className="text-slate-500 text-xs uppercase tracking-widest font-bold mb-1">Vol</span>
                 <input 
@@ -486,7 +515,7 @@ const BrickBreaker: React.FC = () => {
               </div>
               <div className="flex flex-col items-end">
                 <span className="text-slate-500 text-xs uppercase tracking-widest font-bold">Lives</span>
-                <div className="flex gap-1">
+                <div className="flex gap-1 mt-1">
                   {[...Array(3)].map((_, i) => (
                     <div 
                       key={i} 
@@ -495,6 +524,16 @@ const BrickBreaker: React.FC = () => {
                   ))}
                 </div>
               </div>
+            </div>
+
+            {/* Mobile Vol */}
+            <div className="flex md:hidden items-center justify-center w-full mt-1">
+              <span className="text-slate-500 text-[10px] uppercase tracking-widest font-bold mr-2">Vol</span>
+              <input 
+                type="range" min="0" max="1" step="0.01" 
+                value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))}
+                className="w-32 h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
             </div>
           </div>
 
@@ -613,14 +652,14 @@ const BrickBreaker: React.FC = () => {
         </div>
 
         {/* Controls Hint */}
-        <div className="mt-6 flex justify-center gap-8 text-slate-600 text-sm font-medium">
+        <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8 text-slate-600 text-xs md:text-sm font-medium">
           <div className="flex items-center gap-2">
             <kbd className="px-2 py-1 bg-gray-200 rounded border border-gray-300 text-slate-700">←</kbd>
             <kbd className="px-2 py-1 bg-gray-200 rounded border border-gray-300 text-slate-700">→</kbd>
             <span>Move Paddle</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-4 h-4 md:w-5 md:h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
             </svg>
             <span>Touch / Swipe</span>
